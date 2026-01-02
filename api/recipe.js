@@ -1,4 +1,15 @@
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  // Handle preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -6,16 +17,21 @@ export default async function handler(req, res) {
 
   const { ingredients } = req.body;
 
+  console.log('[recipe] Received request with ingredients:', ingredients);
+
   if (!ingredients || !Array.isArray(ingredients) || ingredients.length === 0) {
+    console.error('[recipe] Invalid ingredients:', ingredients);
     return res.status(400).json({ error: 'Ingredients must be a non-empty array' });
   }
 
-  const HUGGINGFACE_API_KEY = process.env.VITE_HUGGINGFACE_API_KEY || process.env.HUGGINGFACE_API_KEY;
+  const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY || process.env.VITE_HUGGINGFACE_API_KEY;
 
   if (!HUGGINGFACE_API_KEY) {
-    console.error('API key not found. Available env vars:', Object.keys(process.env).filter(k => k.includes('HUG')));
-    return res.status(500).json({ error: 'API key not configured' });
+    console.error('[recipe] API key not found. Available env vars:', Object.keys(process.env).filter(k => k.includes('HUG') || k.includes('VERCEL')));
+    return res.status(500).json({ error: 'API key not configured', debug: 'Check environment variables in Vercel dashboard' });
   }
+
+  console.log('[recipe] API key found, length:', HUGGINGFACE_API_KEY.length);
 
   const ingredientsString = ingredients.join(', ');
   const SYSTEM_PROMPT = `You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. 
