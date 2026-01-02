@@ -10,9 +10,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Ingredients must be a non-empty array' });
   }
 
-  const HUGGINGFACE_API_KEY = process.env.VITE_HUGGINGFACE_API_KEY;
+  const HUGGINGFACE_API_KEY = process.env.VITE_HUGGINGFACE_API_KEY || process.env.HUGGINGFACE_API_KEY;
 
   if (!HUGGINGFACE_API_KEY) {
+    console.error('API key not found. Available env vars:', Object.keys(process.env).filter(k => k.includes('HUG')));
     return res.status(500).json({ error: 'API key not configured' });
   }
 
