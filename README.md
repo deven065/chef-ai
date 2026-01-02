@@ -1,12 +1,42 @@
-<<<<<<< HEAD
-# Chef-Claude
-=======
-# React + Vite
+# Chef AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based AI-powered recipe suggestion app that uses Hugging Face's AI models to generate recipes based on ingredients you have on hand.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
->>>>>>> 128537b (Chef Claude React App)
+- Input ingredients you have available
+- Get AI-generated recipe suggestions using Hugging Face's Llama 3.2 model
+- Clean, modern UI built with React and Vite
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add your Hugging Face API key:
+   ```
+   VITE_HUGGINGFACE_API_KEY=your_api_key_here
+   ```
+   You can get a free API key at [Hugging Face](https://huggingface.co/settings/tokens)
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Tech Stack
+
+- React 18
+- Vite
+- Hugging Face Inference API
+- React Markdown for recipe rendering
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
